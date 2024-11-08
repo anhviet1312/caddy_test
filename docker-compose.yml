@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  go_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      go_caddy_network:
+        ipv4_address: 172.28.0.2
+    ports:
+      - "8080:8080"
+    container_name: go_app_caddy
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - go_app
+    networks:
+      go_caddy_network:
+        ipv4_address: 172.28.0.3
+    container_name: caddy
+
+networks:
+  go_caddy_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

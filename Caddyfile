@@ -1,0 +1,8 @@
+http://icetea.local {
+    log {
+            output stdout
+            level info
+    }
+
+    reverse_proxy go_app:8080
+}
