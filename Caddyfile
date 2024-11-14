@@ -1,8 +1,18 @@
 http://icetea.local {
-    log {
-            output stdout
-            level info
+    @allowedIPs {
+       not remote_ip private_ranges
     }
 
-    reverse_proxy go_app:8080
+    log {
+        output stdout
+        level info
+    }
+
+    # Allow only private IPs
+    handle @allowedIPs {
+        reverse_proxy go_app:3000
+    }
+
+    # Deny all other IPs with a 403 response
+    respond "Access Denied" 403
 }

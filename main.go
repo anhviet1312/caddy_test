@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func main() {
 	router := gin.Default()
-	router.GET("/api", getApi)
-	err := router.Run("0.0.0.0:8080")
+	router.GET("/", getApi)
+	err := router.Run("0.0.0.0:3000")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -17,8 +16,5 @@ func main() {
 }
 
 func getApi(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"Message": "successfully!",
-		"Data":    "test for caddy",
-	})
+	c.String(200, "hello world")
 }

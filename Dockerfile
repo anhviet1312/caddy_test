@@ -1,25 +1,20 @@
-# Use an official Go image to build
-FROM golang:1.22-alpine AS builder
+# Sử dụng image Golang chính thức
+FROM golang:1.22
 
-# Set the working directory
+# Thiết lập thư mục làm việc trong container
 WORKDIR /app
 
-# Copy all files to the working directory
+# Sao chép file Go mod và sum để cài đặt các gói phụ thuộc
+COPY go.mod go.sum ./
+
+# Tải các gói phụ thuộc
+RUN go mod download
+
+# Sao chép tất cả các file trong thư mục hiện tại vào thư mục làm việc trong container
 COPY . .
 
-# Download the modules and build the application
-RUN go mod download
+# Xây dựng ứng dụng
 RUN go build -o main .
 
-# Create a lightweight image for runtime
-FROM alpine:latest
-WORKDIR /app
-
-# Copy the executable file from the builder
-COPY --from=builder /app/main .
-
-# Expose the application's port
-EXPOSE 8080
-
-# Run the application
+# Chạy ứng dụng
 CMD ["./main"]
